@@ -1,0 +1,167 @@
+#include "linkedList.h"
+#include "parser.h"
+/*
+Print items based on their type
+*/
+void printItem(const GENERIC_LIST_ITEM_t *item){
+  switch(item->type){
+    case CHAR_TYPE:
+      printf("%c\n",item->element.c);
+      break;
+    case INT_TYPE:
+      printf("%ld\n",item->element.i);
+      break;
+    case DOUBLE_TYPE:
+      printf("%f\n",item->element.d);
+      break;
+    case STRING_TYPE:
+      printf("%s\n",item->element.s);
+      break;
+    default:
+      printf("Unknown Type");
+  }
+}
+
+int getType(PARSE_RESULT_t *result)
+{
+	if(result->right_operand1 == "" || result->right_operand2 '')
+	{
+		return 0;
+	}
+	else if(result->right_operand1 == '' || result->right_operand2 == '')
+	{
+		return 1;
+	}
+	else if(isDigit(operand[0]))
+	{
+		return
+	}
+	else 
+	{
+		
+	}
+
+
+}
+void addDict(PARSE_RESULT_t* result, GENERIC_LIST_t *list, ELEMENT_TYPE_e type, ELEMENT_t element)
+{
+  GENERIC_LIST_ITEM_t *item = calloc(1,sizeof(GENERIC_LIST_ITEM_t));
+  item->element = element;
+  item->type = type;
+  GENERIC_LIST_ITEM_t *last_item;
+
+  GENERIC_LIST_ITEM_t *item = calloc(1,sizeof(GENERIC_LIST_ITEM_t));
+  DICT_t *dict_t = calloc(1,sizeof(DICT_t));
+  dict_t->key = result->left_operand;
+  GENERIC_LIST_ITEM_t * value;
+
+ // dict->value = result->right_operand1;
+
+ ELEMENT_t element;
+
+ if(result->optype == INT_TYPE)
+ {
+   dict->value = {element,INT_TYPE,NULL};
+   dict->value.element.i =  result->right_operand1;
+} 
+ // printf("%s\n", dict->value);
+
+  if(list->size == 0){
+    list->head = item;
+    list->size = 1;
+  }
+  else{
+    last_item = list->head;
+    while(last_item->next != NULL){
+      last_item = last_item->next;
+    }
+    last_item->next = item;
+    list->size += 1;
+  }
+
+}
+
+/*
+Add elements to list. Requires a type and an element. Creates dynamic memory 
+to hold the GENERIC_LIST_ITEM_t structure
+*/
+void addElement(GENERIC_LIST_t *list, ELEMENT_TYPE_e type, ELEMENT_t element){
+
+  
+
+  GENERIC_LIST_ITEM_t *item = calloc(1,sizeof(GENERIC_LIST_ITEM_t));
+  item->element = element;
+  item->type = type;
+  GENERIC_LIST_ITEM_t *last_item;
+
+  if(list->size == 0){
+    list->head = item;
+    list->size = 1;
+  }
+  else{
+    last_item = list->head;
+    while(last_item->next != NULL){
+      last_item = last_item->next;
+    }
+    last_item->next = item;
+    list->size += 1;
+  }
+}
+
+/*
+Remove item from list at given index
+*/
+void removeElement(GENERIC_LIST_t *list,int index){
+  //If list bigger than size, do nothing
+  if(index >= list->size){
+    return;
+  }
+  //If removing first object, set head pointer of list to
+  //the next item of the item at index 0. Could be null
+  //which is why the above is probably redundant
+  else if(index == 0){
+    GENERIC_LIST_ITEM_t *item = list->head;
+    list->head = list->head->next;
+    list->size -= 1;
+    if(item->type == STRING_TYPE){
+      free(item->element.s);
+    }
+    free(item);
+  }
+  //Normal case
+  else{
+    int i = 0;
+    GENERIC_LIST_ITEM_t *item;
+    GENERIC_LIST_ITEM_t *prev = list->head;
+    //Set prev pointer to item before item to be removed
+    for(i=1;i<index;i++){
+      prev = prev->next;
+    }
+    //set item pointer to item to be removed
+    item = prev->next;
+    //set previous next to point at the item following the removed
+    prev->next = item->next;
+    //free the memory for the item
+    if(item->type == STRING_TYPE){
+      free(item->element.s);
+    }
+    free(item);
+    //Decrement the list size
+    list->size -= 1;
+  }
+}
+
+/*
+Print the list in sequence
+*/
+void printList(const GENERIC_LIST_t *list){
+  int size = list->size;
+  int i = 0;
+  GENERIC_LIST_ITEM_t *item = list->head;
+  printf("List Size: %d\n",list->size);
+  for(i=0;i<size;i++){
+    printItem(item);
+    item = item->next;
+  }
+}
+
